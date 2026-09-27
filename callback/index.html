@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>TikTok-Anmeldung – WissensMoment</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; max-width: 680px; margin: 40px auto; padding: 0 16px; line-height: 1.6; color: #1d1d1f; background: #fff; }
+  textarea { width: 100%; box-sizing: border-box; font: 14px ui-monospace, monospace; padding: 8px; }
+  button { font-size: 16px; padding: 8px 16px; margin-top: 8px; }
+  .error { color: #b00020; }
+</style>
+</head>
+<body>
+<h1>TikTok-Anmeldung</h1>
+<p id="info">Lese Antwort von TikTok …</p>
+<textarea id="code" rows="4" readonly hidden></textarea>
+<button id="copy" hidden>Code kopieren</button>
+<script>
+  // Der Code wird nur angezeigt. Diese Seite sendet nichts und speichert nichts.
+  const params = new URLSearchParams(window.location.search);
+  const info = document.getElementById("info");
+  const box = document.getElementById("code");
+  const copy = document.getElementById("copy");
+  const code = params.get("code");
+  if (params.get("error")) {
+    info.className = "error";
+    info.textContent = "TikTok meldet einen Fehler: " + params.get("error") + " " + (params.get("error_description") || "");
+  } else if (code) {
+    info.textContent = "Anmeldung erfolgreich. Kopiere diesen Code und füge ihn im Terminal bei tiktok_auth.py ein (State: " + (params.get("state") || "–") + "):";
+    box.value = code;
+    box.hidden = false;
+    copy.hidden = false;
+    copy.onclick = () => { box.select(); navigator.clipboard.writeText(code); copy.textContent = "Kopiert ✓"; };
+  } else {
+    info.textContent = "Kein Code gefunden. Bitte die Anmeldung über tiktok_auth.py neu starten.";
+  }
+</script>
+</body>
+</html>
